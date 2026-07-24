@@ -117,20 +117,19 @@ The project CLAUDE.md points Claude at `docs/ai-context.md` first — a single s
 
 For feature work on a project that has OpenSpec configured:
 
-```
-/start-ticket <issue>
-    └─ creates branch
-    └─ /grill-with-docs  →  CONTEXT-<branch>.md + ADRs
-    └─ /opsx:propose     →  proposal.md
-         └─ /opsx:new-change  →  design.md + specs/ + tasks.md
-              └─ implement from tasks.md
-                   └─ /opsx:verify-change
-                        └─ /create-pr  →  PR opened
-                             └─ /address-review  →  feedback resolved
-                                  └─ /merge-pr
-```
+| Step | Command | Output |
+|---|---|---|
+| 1 | `/start-ticket <issue>` | branch created, ticket assigned — then runs steps 2 and 3 automatically |
+| 2 | `/grill-with-docs` | `CONTEXT-<branch>.md` glossary + ADRs for hard decisions |
+| 3 | `/opsx:propose` | `proposal.md` |
+| 4 | `/opsx:new-change` | `design.md` + `specs/` + `tasks.md` |
+| 5 | implement from `tasks.md` | — |
+| 6 | `/opsx:verify-change` | implementation sign-off |
+| 7 | `/create-pr` | draft PR, linked to issue |
+| 8 | `/address-review` | review threads resolved |
+| 9 | `/merge-pr` | — |
 
-`/start-ticket` is the single entry point — it handles provider detection (GitHub vs Azure DevOps), branch creation, ticket assignment, and kicks off the grill session automatically. You can also run `/grill-with-docs` standalone on any repo, even ones without OpenSpec.
+Steps 2 and 3 run automatically inside `/start-ticket` — it handles provider detection (GitHub vs Azure DevOps), branch creation, and ticket assignment before handing off to the grill session. You can also run `/grill-with-docs` standalone on any repo, even ones without OpenSpec.
 
 ---
 
