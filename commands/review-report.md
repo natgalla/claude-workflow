@@ -1,6 +1,6 @@
 ---
 name: "Review Report"
-description: Run /code-review, /smell, and /sync-docs in parallel, consolidate findings into a prioritized action item list, and present for approval.
+description: Run /code-review, /smell, /a11y-review, and /sync-docs in parallel, consolidate findings into a prioritized action item list, and present for approval.
 model: opus
 effort: xhigh
 ---

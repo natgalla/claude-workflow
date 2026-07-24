@@ -50,7 +50,7 @@ Invoked as `/command-name` inside any Claude Code session. These are the workhor
 
 | Command | What it does |
 |---|---|
-| `/review-report` | Runs `/code-review`, `/smell`, and `/sync-docs` in parallel and consolidates findings into a prioritized list. The standard pre-PR quality pass. |
+| `/review-report` | Runs `/code-review`, `/smell`, `/a11y-review`, and `/sync-docs` in parallel and consolidates findings into a prioritized list. The standard pre-PR quality pass. |
 | `/smell` | Scans the diff for code smells against the Clean Code + GoF + Python catalogs. |
 | `/a11y-review` | Checks the diff for WCAG 2.1 AA violations and HTTP verb correctness. |
 | `/security-review` | Reviews the diff against an OWASP Top 10 reference doc plus project-specific invariants. |
