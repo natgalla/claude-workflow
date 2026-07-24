@@ -123,7 +123,7 @@ For feature work on a project that has OpenSpec configured:
 | 2 | `/grill-with-docs` | `CONTEXT-<branch>.md` glossary + ADRs for hard decisions |
 | 3 | `/opsx:propose` | `proposal.md` |
 | 4 | `/opsx:new-change` | `design.md` + `specs/` + `tasks.md` |
-| 5 | implement from `tasks.md` | — |
+| 5 | `/opsx:apply-change` | implements tasks from `tasks.md` |
 | 6 | `/opsx:verify-change` | implementation sign-off |
 | 7 | `/create-pr` | draft PR, linked to issue |
 | 8 | `/opsx:archive-change` | OpenSpec change archived alongside the PR |
