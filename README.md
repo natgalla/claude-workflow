@@ -128,7 +128,7 @@ For feature work on a project that has OpenSpec configured:
 | Fast — all artifacts at once | `/opsx:propose` | `proposal.md` + `design.md` + `tasks.md` in one shot |
 | Deliberate — one artifact at a time | `/opsx:new-change` | walks through each artifact, pausing for your input between each |
 
-**4. Implement** — shared for both paths:
+**4. Implement:**
 
 | Step | Command | Output |
 |---|---|---|
