@@ -59,7 +59,7 @@ Invoked as `/command-name` inside any Claude Code session. These are the workhor
 
 | Command | What it does |
 |---|---|
-| `/create-pr` | Commits remaining changes, runs the pre-PR review, pushes, and opens the PR — linked back to the originating issue. GitHub and ADO. |
+| `/create-pr` | Commits remaining changes, runs the pre-PR review, pushes, and opens a **draft** PR linked back to the originating issue. GitHub and ADO. |
 | `/address-review` | Fetches PR review threads, works through each one, replies/resolves, and re-requests review. |
 | `/ready-for-review` | Marks the PR ready for review and optionally requests a specific reviewer. |
 | `/merge-pr` | Verifies approval and merges. GitHub and ADO. |
