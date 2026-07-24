@@ -117,16 +117,11 @@ The project CLAUDE.md points Claude at `docs/ai-context.md` first — a single s
 
 For feature work on a project that has OpenSpec configured:
 
-**1. Kick off** — `/start-ticket <issue>` handles provider detection (GitHub vs Azure DevOps), creates the branch, assigns the ticket, then automatically runs `/grill-with-docs`.
+**1. Kick off** — `/start-ticket <issue>` handles provider detection (GitHub vs Azure DevOps), creates the branch, assigns the ticket, then automatically runs `/grill-with-docs` and `/opsx:propose`.
 
-**2. Align** — `/grill-with-docs` produces `CONTEXT-<branch>.md` (glossary of settled terms) and ADRs for hard one-way decisions.
+**2. Align** — `/grill-with-docs` produces `CONTEXT-<branch>.md` (glossary of settled terms) and ADRs for hard one-way decisions. Run automatically by `/start-ticket`.
 
-**3. Design** — choose one path:
-
-| Path | Command | Output |
-|---|---|---|
-| Fast — all artifacts at once | `/opsx:propose` | `proposal.md` + `design.md` + `tasks.md` in one shot |
-| Deliberate — one artifact at a time | `/opsx:new-change` | walks through each artifact, pausing for your input between each |
+**3. Design** — `/opsx:propose` creates all artifacts (`proposal.md` + `design.md` + `tasks.md`) in one shot. Run automatically by `/start-ticket`. Use `/opsx:new-change` instead if you want to walk through each artifact one at a time with your input between each.
 
 **4. Implement:**
 
