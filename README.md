@@ -128,13 +128,18 @@ For feature work on a project that has OpenSpec configured:
 | Fast — all artifacts at once | `/opsx:propose` | `proposal.md` + `design.md` + `tasks.md` in one shot |
 | Deliberate — one artifact at a time | `/opsx:new-change` | walks through each artifact, pausing for your input between each |
 
-**4. Implement onward** — shared for both paths:
+**4. Implement** — shared for both paths:
 
 | Step | Command | Output |
 |---|---|---|
 | 4 | `/opsx:apply-change` | implements tasks from `tasks.md`, checks them off as it goes |
 | 5 | `/opsx:verify-change` | implementation sign-off against the change artifacts |
 | 6 | `/create-pr` | draft PR, linked to issue |
+
+**5. Ship:**
+
+| Step | Command | Output |
+|---|---|---|
 | 7 | `/opsx:archive-change` | OpenSpec change archived alongside the PR |
 | 8 | `/ready-for-review` | PR marked ready, reviewer requested |
 | 9 | `/address-review` | review threads resolved |
