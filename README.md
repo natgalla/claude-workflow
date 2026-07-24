@@ -117,21 +117,30 @@ The project CLAUDE.md points Claude at `docs/ai-context.md` first — a single s
 
 For feature work on a project that has OpenSpec configured:
 
+**1. Kick off** — `/start-ticket <issue>` handles provider detection (GitHub vs Azure DevOps), creates the branch, assigns the ticket, then automatically runs `/grill-with-docs`.
+
+**2. Align** — `/grill-with-docs` produces `CONTEXT-<branch>.md` (glossary of settled terms) and ADRs for hard one-way decisions.
+
+**3. Design** — choose one path:
+
+| Path | Command | Output |
+|---|---|---|
+| Fast — all artifacts at once | `/opsx:propose` | `proposal.md` + `design.md` + `tasks.md` in one shot |
+| Deliberate — one artifact at a time | `/opsx:new-change` | walks through each artifact, pausing for your input between each |
+
+**4. Implement onward** — shared for both paths:
+
 | Step | Command | Output |
 |---|---|---|
-| 1 | `/start-ticket <issue>` | branch created, ticket assigned — then runs steps 2 and 3 automatically |
-| 2 | `/grill-with-docs` | `CONTEXT-<branch>.md` glossary + ADRs for hard decisions |
-| 3 | `/opsx:propose` | `proposal.md` |
-| 4 | `/opsx:new-change` | `design.md` + `specs/` + `tasks.md` |
-| 5 | `/opsx:apply-change` | implements tasks from `tasks.md` |
-| 6 | `/opsx:verify-change` | implementation sign-off |
-| 7 | `/create-pr` | draft PR, linked to issue |
-| 8 | `/opsx:archive-change` | OpenSpec change archived alongside the PR |
-| 9 | `/ready-for-review` | PR marked ready, reviewer requested |
-| 10 | `/address-review` | review threads resolved |
-| 11 | `/merge-pr` | — |
+| 4 | `/opsx:apply-change` | implements tasks from `tasks.md`, checks them off as it goes |
+| 5 | `/opsx:verify-change` | implementation sign-off against the change artifacts |
+| 6 | `/create-pr` | draft PR, linked to issue |
+| 7 | `/opsx:archive-change` | OpenSpec change archived alongside the PR |
+| 8 | `/ready-for-review` | PR marked ready, reviewer requested |
+| 9 | `/address-review` | review threads resolved |
+| 10 | `/merge-pr` | — |
 
-Steps 2 and 3 run automatically inside `/start-ticket` — it handles provider detection (GitHub vs Azure DevOps), branch creation, and ticket assignment before handing off to the grill session. You can also run `/grill-with-docs` standalone on any repo, even ones without OpenSpec.
+You can also run `/grill-with-docs` standalone on any repo, even ones without OpenSpec.
 
 ---
 
