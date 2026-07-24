@@ -91,6 +91,8 @@ Project agents that Claude Code can spin up as parallel workers via the Task too
 
 **`hipaa-compliance`** — HIPAA Privacy, Security, and Breach Notification Rule reviewer. Applies five checks (PHI contact, minimum necessary, Security Rule safeguards, audit trail, breach surface) to code, data models, and feature proposals. Cites specific 45 CFR rules — never improvises regulatory requirements. Backed by the `~/Documents/dt/domain-docs/hipaa.md` reference doc. Returns findings at BLOCKER / HIGH / MEDIUM / LOW severity.
 
+**This pattern is repeatable.** For any domain or compliance area a project carries — PCI, WCAG, SOC 2, a client's specific business rules — the same two-step setup applies: run `/domain-doc <domain>` to scaffold a citable reference doc, then write an agent that reads that doc and applies it to code and proposals. The agent is only as good as its reference; a role description with no source will improvise. The HIPAA agent is the template.
+
 ---
 
 ## How this connects to project-level setup
