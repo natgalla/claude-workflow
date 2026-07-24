@@ -127,8 +127,9 @@ For feature work on a project that has OpenSpec configured:
 | 6 | `/opsx:verify-change` | implementation sign-off |
 | 7 | `/create-pr` | draft PR, linked to issue |
 | 8 | `/opsx:archive-change` | OpenSpec change archived alongside the PR |
-| 9 | `/address-review` | review threads resolved |
-| 10 | `/merge-pr` | — |
+| 9 | `/ready-for-review` | PR marked ready, reviewer requested |
+| 10 | `/address-review` | review threads resolved |
+| 11 | `/merge-pr` | — |
 
 Steps 2 and 3 run automatically inside `/start-ticket` — it handles provider detection (GitHub vs Azure DevOps), branch creation, and ticket assignment before handing off to the grill session. You can also run `/grill-with-docs` standalone on any repo, even ones without OpenSpec.
 
