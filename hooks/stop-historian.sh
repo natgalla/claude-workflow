@@ -1,6 +1,6 @@
 #!/bin/bash
 # Runs on session Stop (including /clear and compact).
-# Always fires the 200KB notification to prompt a manual /historian save while context is live.
+# Fires a 300KB notification to prompt a manual /save while context is live.
 # If no manual save exists for today, writes a git-based auto-save as a failsafe.
 # Auto-saved files are marked <!-- AUTO-SAVED --> so they can be overwritten by subsequent
 # auto-saves (e.g. after a /clear mid-day) without clobbering a manual save.
@@ -28,8 +28,8 @@ PROJECT_KEY=$(echo "$CWD" | tr '/' '-')
 TRANSCRIPT=$(ls -t "$HOME/.claude/projects/$PROJECT_KEY"/*.jsonl 2>/dev/null | head -1)
 if [ -n "$TRANSCRIPT" ]; then
   SIZE=$(wc -c < "$TRANSCRIPT" 2>/dev/null || echo 0)
-  if [ "$SIZE" -gt 200000 ]; then
-    osascript -e 'display notification "Context is large — run /historian to save the session" with title "Claude Code" sound name "Ping"' 2>/dev/null || true
+  if [ "$SIZE" -gt 300000 ]; then
+    osascript -e 'display notification "Context is large — run /save before clearing" with title "Claude Code" sound name "Ping"' 2>/dev/null || true
   fi
 fi
 

@@ -82,7 +82,8 @@ Invoked as `/command-name` inside any Claude Code session. These are the workhor
 
 | Command | What it does |
 |---|---|
-| `/load` | Loads the most recent session summary for the current project. Reads the saved history file directly — only falls back to the historian agent when no file exists. Use at the start of every session. |
+| `/save` | Saves the current session via the historian agent. Shorthand for manual historian SAVE — run this before `/clear` or at end of day. |
+| `/load` | Manual escape hatch for loading session context. The `UserPromptSubmit` hook auto-injects history at session start — use `/load` when you need context from a different project or the hook didn't fire. |
 | `/orient` | Reads an unfamiliar codebase and summarizes its stack, architecture, and key functionality. Good first step on a new repo. |
 | `/bug-triage` | Fetches an issue, validates it, finds the root cause, assesses impact, and produces an implementation plan. |
 | `/domain-doc` | Scaffolds an authoritative, citable reference doc for a domain or compliance area (HIPAA, PCI, WCAG, etc.). Agents must be backed by one of these — not just a role description. |
@@ -102,13 +103,25 @@ Agents that Claude Code can spin up as parallel workers. The routing rules in `C
 | `test-runner` | Runs the test suite (full or targeted). Reports only failures and summary counts. Auto-detects the framework. |
 | `researcher` | Answers factual questions by searching local docs then the web. Cites sources. Use for API behavior, library docs, version constraints — never answer from memory. |
 | `code-review` | Runs `/review-report` and its sub-skills (code-review, smell, a11y-review, sync-docs). Absorbs noisy intermediate output so main context only sees the final report. |
-| `historian` | `SAVE` — summarizes the session and writes a dated history file at end-of-day. `BACKFILL` — reconstructs history from git log. For LOAD, use `/load` instead. |
+| `historian` | `SAVE` — summarizes the session and writes a dated history file. Invoke via `/save`. `BACKFILL` — reconstructs history from git log. For LOAD, use `/load` or rely on the auto-inject hook. |
 
 **Domain compliance agents** (invoke explicitly when reviewing PHI-touching code):
 
 **`hipaa-compliance`** — HIPAA Privacy, Security, and Breach Notification Rule reviewer. Applies five checks (PHI contact, minimum necessary, Security Rule safeguards, audit trail, breach surface) to code, data models, and feature proposals. Cites specific 45 CFR rules — never improvises regulatory requirements. Backed by the `~/Documents/dt/domain-docs/hipaa.md` reference doc. Returns findings at BLOCKER / HIGH / MEDIUM / LOW severity.
 
 **This pattern is repeatable.** For any domain or compliance area a project carries — PCI, WCAG, SOC 2, a client's specific business rules — the same two-step setup applies: run `/domain-doc <domain>` to scaffold a citable reference doc, then write an agent that reads that doc and applies it to code and proposals. The agent is only as good as its reference; a role description with no source will improvise. The HIPAA agent is the template.
+
+### `hooks/` — session lifecycle automation
+
+Three hooks wire up the session history system. They require entries in `~/.claude/settings.json` — see the Installation section.
+
+| Hook | Trigger | What it does |
+|---|---|---|
+| `session-start-historian.sh` | `SessionStart` (startup + clear) | Writes a sentinel file at `/tmp/claude-historian-<session_id>.sentinel` |
+| `user-prompt-submit-historian.sh` | `UserPromptSubmit` (first prompt only) | Checks for the sentinel, reads the most recent history file for the current project, injects it as `additionalContext`, then deletes the sentinel — so history loads automatically without running `/load` |
+| `stop-historian.sh` | `Stop` | If the session transcript exceeds 300KB, fires a macOS notification: "Context is large — run /save before clearing". Also writes a git-based auto-save as a failsafe if no manual save exists for the day. |
+
+The net effect: history is always available at the start of a session, and you get a nudge to `/save` before context bloats too far.
 
 ---
 
@@ -167,7 +180,26 @@ You can also run `/grill-with-docs` standalone on any repo, even ones without Op
 bash install.sh
 ```
 
-The script copies `CLAUDE.md`, `commands/`, and `agents/` into `~/.claude/`, backing up any existing files first. See `install.sh` for what it does before it does it.
+The script copies `CLAUDE.md`, `commands/`, `agents/`, and `hooks/` into `~/.claude/`, backing up any existing files first. See `install.sh` for what it does before it does it.
+
+After running the script, add the following to `~/.claude/settings.json` to wire up the hooks:
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      { "matcher": "startup", "hooks": [{ "type": "command", "command": "~/.claude/hooks/session-start-historian.sh" }] },
+      { "matcher": "clear",   "hooks": [{ "type": "command", "command": "~/.claude/hooks/session-start-historian.sh" }] }
+    ],
+    "UserPromptSubmit": [
+      { "hooks": [{ "type": "command", "command": "~/.claude/hooks/user-prompt-submit-historian.sh" }] }
+    ],
+    "Stop": [
+      { "hooks": [{ "type": "command", "command": "~/.claude/hooks/stop-historian.sh" }] }
+    ]
+  }
+}
+```
 
 ### Manual install
 
@@ -179,7 +211,11 @@ cp ~/.claude/CLAUDE.md ~/.claude/CLAUDE.md.bak 2>/dev/null
 cp CLAUDE.md ~/.claude/CLAUDE.md
 cp -r commands/ ~/.claude/commands/
 cp -r agents/ ~/.claude/agents/
+cp -r hooks/ ~/.claude/hooks/
+chmod +x ~/.claude/hooks/*.sh
 ```
+
+Then add the hooks snippet above to `~/.claude/settings.json`.
 
 ---
 
