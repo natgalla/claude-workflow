@@ -236,7 +236,7 @@ git log --stat --format="%x1f%ad%x1f%ae%x1f%s%x1f" --date=short --after="<summar
 If there are no new commits, skip this step.
 
 Partition the commits into two groups using the author email field (`%ae`):
-- **Your changes** — commits where the author email matches the current user's email (available from the environment as `ngallagher@developertown.com`)
+- **Your changes** — commits where the author email matches `$(git config user.email)`
 - **Teammate changes** — all other authors, grouped by author name/email
 
 Synthesize a brief catch-up section — do not list raw hashes, summarize what actually changed:
@@ -261,10 +261,10 @@ Reconstruct project history from git commit logs. This produces day files derive
 
 ### Step 1 — Locate repos
 
-Find all git repos under the base directory. Default base: `~/Documents/dt`. Accept an override if the caller specifies one.
+Find all git repos under the base directory. Default base: `$HOME`. Accept an override if the caller specifies one — narrowing the base (e.g. `~/code`, `~/projects`) significantly reduces scan time.
 
 ```bash
-find ~/Documents/dt -maxdepth 3 -name ".git" -type d
+find <base-dir> -maxdepth 4 -name ".git" -type d
 ```
 
 Derive project name from each repo's directory basename.
@@ -277,7 +277,16 @@ For each repo, get all commits from the start date onward, grouped by day. Use `
 git -C <repo-path> log --format="%x1f%ad%x1f%H%x1f%s%x1f%b%x1e" --date=format-local:%Y-%m-%d --after="<start-date>" --reverse
 ```
 
-Default start date: `2026-06-03` (the user's company start date — earliest meaningful commit boundary). Accept an override if the caller specifies one.
+Default start date: 90 days ago. Compute it at run time:
+
+```bash
+# macOS / BSD date
+date -v-90d +%Y-%m-%d
+# GNU date (Linux)
+date -d "90 days ago" +%Y-%m-%d
+```
+
+Accept an override if the caller specifies a date or a "N days ago" expression.
 
 Split on `%x1e`/`%x1f` as described in LOAD Step 1b.
 

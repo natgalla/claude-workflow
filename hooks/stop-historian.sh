@@ -29,6 +29,7 @@ TRANSCRIPT=$(ls -t "$HOME/.claude/projects/$PROJECT_KEY"/*.jsonl 2>/dev/null | h
 if [ -n "$TRANSCRIPT" ]; then
   SIZE=$(wc -c < "$TRANSCRIPT" 2>/dev/null || echo 0)
   if [ "$SIZE" -gt 300000 ]; then
+    # macOS only — silently skipped on other platforms
     osascript -e 'display notification "Context is large — run /save before clearing" with title "Claude Code" sound name "Ping"' 2>/dev/null || true
   fi
 fi

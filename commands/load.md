@@ -40,7 +40,7 @@ If the project has no git repo, skip this step.
 
 If there are no new commits since the summary, skip this step.
 
-Partition commits by author email. The current user's email is `ngallagher@developertown.com`.
+Partition commits by author email. Resolve the current user's email with `git config user.email`.
 
 Synthesize a brief catch-up section under 150 words:
 
