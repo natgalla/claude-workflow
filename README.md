@@ -25,10 +25,14 @@ When you open a project, Claude Code merges both layers. Your user CLAUDE.md set
 Injected into every Claude Code session automatically. Covers:
 
 - **Plan before code** — Claude presents a plan and waits for explicit approval before writing anything. No silent implementations.
+- **Commit messages** — structured around behavior changes, not file names. Bodies carry rationale so the historian agent can reconstruct session context from git history.
 - **PR descriptions** — structured around what changed and how to test it. No dev-process narration.
 - **Tests validate requirements** — tests are written against the spec or acceptance criteria, not the implementation. A test that mirrors the code isn't a test.
 - **Style** — no semicolons in prose, comments explain *why* not *what*.
+- **Diagnosing build issues** — check dev-tooling config before assuming the code is wrong. Recurring failures signal tooling debt.
 - **Scope discipline** — change only what was asked. Unrelated problems get surfaced, not silently fixed.
+- **Database migrations** — multiple migration files on a branch get surfaced and require explicit consolidation approval before a PR.
+- **Subagent routing** — test-runner, build, researcher, Explore, Plan, historian, and code-review each have a designated agent. Bypassing them bloats main context.
 - **Domain knowledge & agents** — any agent enforcing a regulatory or domain constraint must be backed by a concrete reference doc, not a role description. The HIPAA agent in this repo is an example of this pattern.
 - **OpenSpec workflow** — for DeveloperTown projects that have OpenSpec configured, Claude knows the full ticket-to-PR sequence and won't skip steps.
 
@@ -78,6 +82,7 @@ Invoked as `/command-name` inside any Claude Code session. These are the workhor
 
 | Command | What it does |
 |---|---|
+| `/load` | Loads the most recent session summary for the current project. Reads the saved history file directly — only falls back to the historian agent when no file exists. Use at the start of every session. |
 | `/orient` | Reads an unfamiliar codebase and summarizes its stack, architecture, and key functionality. Good first step on a new repo. |
 | `/bug-triage` | Fetches an issue, validates it, finds the root cause, assesses impact, and produces an implementation plan. |
 | `/domain-doc` | Scaffolds an authoritative, citable reference doc for a domain or compliance area (HIPAA, PCI, WCAG, etc.). Agents must be backed by one of these — not just a role description. |
@@ -87,7 +92,19 @@ Invoked as `/command-name` inside any Claude Code session. These are the workhor
 
 ### `agents/` — subagents
 
-Project agents that Claude Code can spin up as parallel workers via the Task tool. Right now there's one:
+Agents that Claude Code can spin up as parallel workers. The routing rules in `CLAUDE.md` tell Claude when to delegate to each one.
+
+**Standard workflow agents** (routed automatically by `CLAUDE.md`):
+
+| Agent | What it does |
+|---|---|
+| `build` | Runs build, compile, type-check, or lint commands. Reports only errors and warnings — never raw output. |
+| `test-runner` | Runs the test suite (full or targeted). Reports only failures and summary counts. Auto-detects the framework. |
+| `researcher` | Answers factual questions by searching local docs then the web. Cites sources. Use for API behavior, library docs, version constraints — never answer from memory. |
+| `code-review` | Runs `/review-report` and its sub-skills (code-review, smell, a11y-review, sync-docs). Absorbs noisy intermediate output so main context only sees the final report. |
+| `historian` | `SAVE` — summarizes the session and writes a dated history file at end-of-day. `BACKFILL` — reconstructs history from git log. For LOAD, use `/load` instead. |
+
+**Domain compliance agents** (invoke explicitly when reviewing PHI-touching code):
 
 **`hipaa-compliance`** — HIPAA Privacy, Security, and Breach Notification Rule reviewer. Applies five checks (PHI contact, minimum necessary, Security Rule safeguards, audit trail, breach surface) to code, data models, and feature proposals. Cites specific 45 CFR rules — never improvises regulatory requirements. Backed by the `~/Documents/dt/domain-docs/hipaa.md` reference doc. Returns findings at BLOCKER / HIGH / MEDIUM / LOW severity.
 
