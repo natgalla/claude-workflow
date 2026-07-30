@@ -60,6 +60,16 @@ When a build, install, lint, or test command fails, check the project's dev-tool
 - **Edge cases & data correctness** — handle null/empty/boundary inputs, use timezone-aware dates, use decimal (not float) for money, and be deliberate about encoding.
 - **Credential file permissions** — any config file containing a token, secret, or credential must be created with `chmod 600`. Do not leave credential files world-readable.
 
+## Citing researcher sources
+
+When a researcher finding backs a lasting decision (one that will appear in the DECISIONS section of the next historian save), emit a `DECISION-SOURCE:` marker on its own line in your response:
+
+```
+DECISION-SOURCE: slug=<slug>
+```
+
+Use the same slug from the researcher's `CITE:` tag. This marker is the signal the historian uses to populate `BIBLIOGRAPHY.md` — only emit it for findings that genuinely grounded a lasting decision, not for every researcher lookup.
+
 ## Database migrations
 Before creating a PR, check whether the branch introduces more than one migration file. Detect migration files by common conventions — Rails (`db/migrate/`), Django/Alembic (`migrations/`, `alembic/versions/`), Flyway/Liquibase (`db/migration/`, `src/main/resources/db/`), TypeORM/Sequelize (`src/migrations/`), Knex (`migrations/`), or any directory whose files follow timestamp/version-prefixed naming like `V001__`, `20240101_`, etc. If more than one migration file exists on the branch, surface them, explain what each does, and ask whether to consolidate before proceeding. Do not consolidate silently — always prompt for a decision. Consolidation is optional if the files cover genuinely separate, unrelated schema concerns.
 

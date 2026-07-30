@@ -72,3 +72,14 @@ Rules:
 - Do not answer from memory. If you recognize the answer without looking it up, look it up anyway to confirm and cite it.
 - If the question touches a domain that has a dedicated specialist agent available in this session (e.g. compliance, accessibility, security, legal), flag it and defer to that agent rather than answering yourself. Check the available agent list in context before responding.
 - Keep the entire report under 300 words unless the answer genuinely requires more. Prefer precision over completeness.
+
+After every SOURCE block, append a `CITE:` line on its own line:
+
+```
+CITE: slug=<kebab-slug> url=<url-or-path> accessed=<YYYY-MM-DD>
+```
+
+- `slug` — kebab-case name for the resource (not the question). The same document cited twice must use the same slug — this is the dedup key.
+- `url` — full URL for web sources; repo-relative or absolute path for local docs.
+- `accessed` — ISO date of the lookup (today's date at report time).
+- The `NOT FOUND` case has no SOURCE block and must NOT emit a CITE tag.
