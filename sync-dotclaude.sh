@@ -52,7 +52,7 @@ for dir in agents commands; do
   fi
 done
 
-ALL_TO_COPY=("${CHANGED[@]}" "${NEW_FILES[@]}")
+ALL_TO_COPY=(${CHANGED[@]+"${CHANGED[@]}"} ${NEW_FILES[@]+"${NEW_FILES[@]}"})
 
 if [[ ${#ALL_TO_COPY[@]} -eq 0 ]]; then
   echo "Already in sync — no changes to propagate."
