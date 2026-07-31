@@ -2,3 +2,4 @@ escalate.sh
 commands/escalate.md
 sync-historian.sh
 commands/sync-historian.md
+commands/sync-check.md
