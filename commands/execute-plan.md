@@ -59,17 +59,17 @@ Then ask:
 
 ### f. Update the plan file
 After the user approves, update the plan file to mark the step complete:
-- Mark done steps with `✅`
+- Mark done steps with `[DONE]`
 - Record implementation decisions or deviations inline
 - Resolve open questions that were answered
-- Mark the next step as `🔄 In Progress`
+- Mark the next step as `[IN PROGRESS]`
 
 Use these status markers throughout:
-- `✅ Done` — approved and complete
-- `🔄 In Progress` — currently being worked on
-- `⏳ Pending` — not yet started
-- `❌ Blocked` — cannot proceed, needs resolution
-- `⚠️ Modified` — implemented differently than planned (note why)
+- `[DONE]` — approved and complete
+- `[IN PROGRESS]` — currently being worked on
+- `[PENDING]` — not yet started
+- `[BLOCKED]` — cannot proceed, needs resolution
+- `[MODIFIED]` — implemented differently than planned (note why)
 
 ---
 

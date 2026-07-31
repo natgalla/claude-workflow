@@ -16,6 +16,10 @@ For each remaining directory:
 - If `DEBRIEF.md` exists in the project root → mark as **debriefed** and skip.
 - Otherwise: look for `.md` files (excluding `TIMELINE.md`) in `~/.claude/history/<project-name>/`. Sort by filename date descending, take the most recent. Extract STATE and OPEN. If none found, mark as **no history**.
 
+## Step 2b — Validate priority config entries
+
+Cross-reference the project names listed in the `p1`, `p2`, and `p3` arrays of the priority config against the directory list from Step 2. Any name that appears in the config arrays but has no matching subdirectory in `~/Documents/dt/` is a stale entry. Collect these names — they will be surfaced at the end of the briefing (Step 4).
+
 ## Step 3 — Assign priorities
 
 For each active project, determine its tier from the config:
@@ -51,3 +55,9 @@ Use this format:
 Omit any tier section entirely if it has no active projects. Do not mention debriefed projects.
 
 Append this footer line: `_Source: live scan of ~/.claude/history/ — run /save on any project to refresh its snapshot._`
+
+If any stale priority config entries were identified in Step 2b, append a warning after the footer:
+
+```
+Priority config references projects not found: X, Y — consider updating project-priorities.json.
+```

@@ -32,14 +32,6 @@ If no arguments were provided, ask the user:
 
 Hold the result as `<SEED>`.
 
-If `$ARGUMENTS` contains a file path, read that file as the seed. Otherwise treat `$ARGUMENTS` as the raw feature description.
-
-If no arguments were provided, ask the user:
-
-> "Paste the issue body, acceptance criteria, or a one-paragraph description of what we're building."
-
-Hold the result as `<SEED>`.
-
 ---
 
 ## Step 1 — Load or initialize CONTEXT-<BRANCH>.md
@@ -121,11 +113,15 @@ Return to Step 2 and scan the seed again, now treating all resolved terms and de
 
 Do not revisit already-resolved items. Do not ask about things that are genuinely out of scope for the current feature.
 
+**Question ceiling:** After 8 questions with no new resolvable ambiguity remaining, stop asking and proceed to Step 6 regardless. The ceiling prevents the interview from becoming exhaustive when the seed is already well-specified.
+
 ---
 
 ## Step 6 — Finish
 
-Tell the user:
+Ask the user: "Anything else to clarify before we write the spec?" Wait for a response before finalizing. If the user adds new information, resolve it as in Steps 3–4 before continuing.
+
+Then tell the user:
 
 - How many terms were added to `CONTEXT-<BRANCH>.md`
 - How many ADRs were created (if any), with their file paths

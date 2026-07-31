@@ -117,14 +117,11 @@ Read any `proposal.md` and `tasks.md` found — they contain the feature descrip
 
 ## Step 6 — Verify and review before opening the PR
 
-First, **run the test suite** so you don't open a red PR. Auto-detect the project's test command (e.g. `package.json` `scripts.test`, `pytest`/`pyproject.toml`, a `Makefile` `test` target) and run it. If tests fail, stop and fix them (or surface the failure to the user) before continuing. For a change with meaningful runtime behavior, also consider driving `/verify` to confirm it actually works, not just that tests pass.
+First, **delegate tests to the test-runner agent** — do not run test commands directly. Provide the agent with the detected test command and ask it to run the suite and return a pass/fail result with any failure details. If tests fail, stop and fix them (or surface the failure to the user) before continuing. For a change with meaningful runtime behavior, also consider driving `/verify` to confirm it actually works, not just that tests pass.
 
-Then run the self-review pass:
+Then **delegate the review to the code-review agent** — do not run review-report inline. Ask the agent to run a full review-report on the current branch (code-review + smell + sync-docs) and return consolidated findings. If the change touches a regulated or sensitive area (PHI, auth, payments, or anything flagged during the OpenSpec proposal), also ask the code-review agent to include a security-review pass.
 
-- Invoke `/review-report` (runs `/code-review` + `/smell` + `/sync-docs` and consolidates the findings).
-- If the change touches a regulated or sensitive area (PHI, auth, payments, or anything flagged during the OpenSpec proposal), also invoke `/security-review`.
-
-Address the findings. If you're intentionally deferring any, note them for the user rather than silently skipping. Commit any fixes (repeat Step 4).
+Both agents must complete before continuing. Address the findings. If you're intentionally deferring any, note them for the user rather than silently skipping. Commit any fixes (repeat Step 4).
 
 ---
 

@@ -68,7 +68,7 @@ When a researcher finding backs a lasting decision (one that will appear in the 
 DECISION-SOURCE: slug=<slug>
 ```
 
-Use the same slug from the researcher's `CITE:` tag. This marker is the signal the historian uses to populate `BIBLIOGRAPHY.md` — only emit it for findings that genuinely grounded a lasting decision, not for every researcher lookup.
+Use the same slug from the researcher's `CITE:` tag. This marker is the signal the historian uses to populate `BIBLIOGRAPHY.md` — only emit it for findings that genuinely grounded a lasting decision, not for every researcher lookup. A finding "grounds" a decision if that decision appears in the DECISIONS section of the next historian save — this makes the bar verifiable rather than a judgment call.
 
 ## Database migrations
 Before creating a PR, check whether the branch introduces more than one migration file. Detect migration files by common conventions — Rails (`db/migrate/`), Django/Alembic (`migrations/`, `alembic/versions/`), Flyway/Liquibase (`db/migration/`, `src/main/resources/db/`), TypeORM/Sequelize (`src/migrations/`), Knex (`migrations/`), or any directory whose files follow timestamp/version-prefixed naming like `V001__`, `20240101_`, etc. If more than one migration file exists on the branch, surface them, explain what each does, and ask whether to consolidate before proceeding. Do not consolidate silently — always prompt for a decision. Consolidation is optional if the files cover genuinely separate, unrelated schema concerns.
@@ -79,12 +79,13 @@ Always delegate to the appropriate subagent rather than doing the work inline:
 - **test-runner** — any time tests need to be run, results checked, or a test failure diagnosed. Do not run test commands directly in the main session.
 - **build** — any time a build, compile, type-check, or lint command needs to run. Do not run build or lint commands directly in the main session.
 - **researcher** — any factual question that requires reading documentation: API behavior, library docs, project ADRs, version constraints, or external specs. Do not answer from memory or fetch docs inline. This applies even when you are confident you know the answer — look it up and cite it.
-- **Explore** — any search across the codebase: finding files by pattern, locating symbol definitions, grepping for keywords, or understanding code structure. Do not run find/grep inline or read whole files to locate something.
+- **Explore** (Agent tool, `subagent_type: "Explore"`) — broad multi-directory searches, pattern matching across the codebase, locating symbol definitions, grepping for keywords, or understanding code structure. Single-file existence checks (`ls CONTEXT-<BRANCH>.md`, `find openspec/ -maxdepth 2`) are fine inline — reserve Explore for searches spanning multiple directories or the whole repo.
 - Tiebreaker: "where is X in the codebase?" → Explore. "How does X work / what do the docs say?" → researcher.
 - **summarizer** — when reading a file for context only (to understand what it does, not to edit or quote it). Returns filename + compressed summary; never the raw content. Use Read directly when you need to edit or quote specific text.
-- **Plan** — any complex multi-step implementation that would benefit from an architecture decision before coding. Do not design non-trivial implementations inline.
+- **Plan** (Agent tool, `subagent_type: "Plan"`) — any complex multi-step implementation that would benefit from an architecture decision before coding. Do not design non-trivial implementations inline.
 - **worktree agent (`isolation: "worktree"`)** — any implementation task that touches more than one file or requires reading context before writing. Spin up the agent on an isolated branch copy, let it implement, then review the diff before merging back. Main context only receives the outcome. Single-line fixes in a known location are the only exception.
-- **`/load`** — at the start of a session to surface the last summary. Reads the saved history file directly; only falls back to the historian agent when no file exists. Do not spawn the historian agent for LOAD.
+- After the user approves a plan for a multi-file implementation, spin up a worktree agent with the approved plan as its context. Do not begin inline implementation of multi-file changes.
+- **`/load`** (skill/command) — at the start of a session to surface the last summary. Reads the saved history file directly; only falls back to the historian agent when no file exists. Do not spawn the historian agent for LOAD.
 - **historian** — `SAVE` (end of session, "wrap up", "summarize the session", "I'm done for the day") and `BACKFILL` (reconstruct history from git) only. Do not summarize sessions inline.
 - **code-review** — any code review request: reviewing a diff, checking a branch for issues, running review-report or its component skills. Do not run review skills inline in the main session.
 

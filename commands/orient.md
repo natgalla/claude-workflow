@@ -20,18 +20,20 @@ If an argument was given, focus on that path/subdir; otherwise use the repo root
 
 ---
 
-## Step 2 — Map the surface (cheap, do this yourself)
+## Step 2 — Map the surface (cheap, do this yourself — manifests only)
 
-Get the lay of the land from the top level before diving in:
+Read only top-level dependency manifests: `package.json`, `pyproject.toml`, `requirements.txt`, `go.mod`, `Gemfile`, `pom.xml`, `build.gradle`, `Cargo.toml`, `composer.json`, and equivalent `*.csproj` / `*.sln` files. These give you the stack and key libraries without pulling in config files.
 
-- **Stack & tooling** — read the manifests/config present: `package.json`, `pyproject.toml`/`requirements.txt`, `go.mod`, `Gemfile`, `pom.xml`/`build.gradle`, `Cargo.toml`, `composer.json`, `*.csproj`; framework/build configs (`tsconfig`, `next.config`, `vite.config`, Django `settings`, etc.); `Dockerfile`/`compose`, CI configs; and the `README`.
+Do not read README or config files inline in Step 2 — those go to the subagent pass in Step 3.
+
+Also get the directory shape:
 - **Shape** — the directory tree a couple of levels deep (`git ls-files` or `find` with a depth limit) to see how the project is organized.
 
 ---
 
 ## Step 3 — Fan out with subagents (keep it cheap and your context lean)
 
-Dispatch several **Explore** subagents in parallel — one per area — and have each return a **tight summary, not raw file contents**. This keeps the token-heavy reading out of your main context and off the expensive model. Typical areas (adapt to the project):
+Dispatch several **Explore** subagents in parallel — one per area — and have each return a **tight summary, not raw file contents**. This keeps the token-heavy reading out of your main context and off the expensive model. Include one subagent for non-manifest surface files: `README`, framework/build configs (`tsconfig`, `next.config`, `vite.config`, Django `settings`), `Dockerfile`/`compose`, CI configs, `.env.example`, and `Makefile`. Typical areas (adapt to the project):
 
 - Entry points & app bootstrap (how it starts, wiring, config loading)
 - Data model & persistence (schema, ORM/models, migrations, datastore)

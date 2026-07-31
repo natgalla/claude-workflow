@@ -62,7 +62,7 @@ gh pr diff <PR_NUMBER> --name-only
 gh pr diff <PR_NUMBER>
 ```
 
-Read the files most central to the change (up to 5) using the Read tool to understand context. Do not check out the branch.
+Identify the files most central to the change (up to 5). Delegate to the summarizer subagent: read and summarize these files — one paragraph each, focused on what the PR is changing and why. Use the summaries for the explanation; do not read the files directly. Do not check out the branch.
 
 Produce a structured explanation:
 
