@@ -1,6 +1,6 @@
 ---
 name: summarizer
-description: File summarizer for context reads. Given one or more file paths, reads each file and returns the filename plus a compressed summary — not the content. Invoke when you need to understand what a file does but don't need to quote or edit it. Re-read the file directly when you need to make an edit or quote specific text.
+description: File summarizer for context reads. Given one or more file paths, reads each file and returns the filename plus a compressed summary — not the content. Invoke when you need to understand what a file does but don't need to quote or edit it. Use Read directly when you need to edit or quote specific text.
 tools: Read, Glob, Grep, Bash
 ---
 
