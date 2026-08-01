@@ -201,6 +201,19 @@ After running the script, add the following to `~/.claude/settings.json` to wire
 }
 ```
 
+### Write-scope boundaries
+
+One rule in `~/.claude/CLAUDE.md` enforces historian integrity. If you installed via `install.sh`, it's already there — the full `CLAUDE.md` includes it. If you cherry-picked only the hooks, add this block manually:
+
+```markdown
+## Write-scope boundaries
+- `~/.claude/history/` is historian-only — the main session must never write there directly
+- `~/.claude/CLAUDE.md` is main-agent territory — the historian surfaces promotion candidates but never writes it
+- `~/.claude/projects/.../memory/` is shared — both the auto-memory system and historian can write there
+```
+
+Without this rule, nothing breaks outright — but Claude may write history files directly from the main session, bypassing the historian's merge logic, timeline tracking, and memory graduation step.
+
 ### Manual install
 
 ```bash
